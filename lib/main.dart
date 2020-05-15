@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import './riddles_list.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(RiddlesApp());
 
@@ -22,11 +24,13 @@ class _RiddlesAppState extends State<RiddlesApp> {
     });
   }
 
-  void answerTheRiddle(int flag) {
+  void _answerTheRiddle(int flag) {
     if (flag == 1) {
-      _totalScore += 1;
+      _totalScore += 10;
     }
-    _riddlesIndex += 1;
+    setState(() {
+      _riddlesIndex += 1;
+    });
     if (_riddlesIndex < _listOfRiddles.length) {
       print("There is a next riddle!");
     } else {
@@ -35,7 +39,14 @@ class _RiddlesAppState extends State<RiddlesApp> {
   }
 
   Widget _createRiddle() {
-    
+    if (_riddlesIndex < _listOfRiddles.length) {
+      return Quiz(
+          riddles: _listOfRiddles,
+          riddleIndex: _riddlesIndex,
+          answerTheRiddle: _answerTheRiddle);
+    } else {
+      return Result(_totalScore, _restartRiddlesQuiz);
+    }
   }
 
   @override
@@ -44,6 +55,7 @@ class _RiddlesAppState extends State<RiddlesApp> {
       home: Scaffold(
         appBar: AppBar(
           title: Text("Riddles!"),
+          backgroundColor: Color.fromRGBO(200, 255, 200, 0.5),
         ),
         body: _createRiddle(),
       ),
